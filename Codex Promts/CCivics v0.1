@@ -1,0 +1,316 @@
+CCivics V0.1
+
+Work directly on the GitHub repository:
+
+"ZAlexT/CCivics"
+
+Goal
+
+Build the first simple, working version of CCivics.
+
+CCivics is a browser extension designed to detect activities/events on Centre Cívic Barcelona pages hosted on "inscripcionscc.com", extract the event-specific information, and let the user review/select the events.
+
+Do NOT implement Google Calendar yet.
+
+The priority is a reliable and lightweight extraction/preview system.
+
+V0.1 workflow
+
+Compatible page
+      ↓
+Detect activity entries
+      ↓
+Extract activity titles
+      ↓
+Show selectable list
+      ↓
+User selects activities
+      ↓
+Extract complete data for selected activities
+      ↓
+Show preview
+
+Important extraction rule
+
+Do NOT parse the entire page as one large text block.
+
+The page can contain many activities as well as unrelated general information.
+
+Each activity must be treated as an independent block:
+
+Activity 1
+ ├─ title
+ ├─ event date
+ ├─ event time
+ ├─ registration
+ ├─ venue
+ ├─ address
+ └─ description
+
+Activity 2
+ ├─ title
+ ├─ event date
+ ├─ event time
+ └─ ...
+
+Never associate a date or registration detail with an activity unless it belongs to that activity's own block.
+
+Ignore general page sections such as:
+
+- Noves inscripcions
+- Tarifes reduïdes
+- Tallers d'hivern
+- Tallers de primavera
+- Tallers de tardor
+- Abans d'inscriure't
+- Normativa d'inscripcions
+- Reserva d'entrades
+- Informació important
+
+These must not become activities.
+
+Data model
+
+Create a common internal event object so the extractor is separated from the UI and future calendar integration.
+
+The model should support at least:
+
+title
+eventDate
+startTime
+endTime
+registrationDate
+registrationTime
+venue
+address
+description
+price
+sessions
+url
+source
+
+Use "null"/empty values when information is genuinely unavailable.
+
+Do not invent missing information.
+
+Registration cases
+
+Support these cases:
+
+- "Inscripcions a partir del 28/09/2026"
+- "a partir del 28/09/2026 a les 10:00"
+- relative registration such as "Inscripció des de quinze dies abans"
+- a later concrete registration date within the same activity block
+- "No cal fer inscripció"
+
+If a concrete date exists for the activity, prefer it over a relative description.
+
+General page registration dates must not be assigned to activities.
+
+Event dates and times
+
+The Google Calendar event will eventually use the real event date/time, not the registration date/time.
+
+For V0.1 simply extract and display both separately.
+
+Title handling
+
+The title should represent the actual activity, not a generic cycle/program label.
+
+Examples:
+
+CONCERT FESTA MAJOR: CRAZY RHYTHM CATS
+
+should remain the activity title.
+
+For:
+
+Concert de desembre: LE CHANT DES MUSES
+
+the activity title should be:
+
+LE CHANT DES MUSES
+
+Do not blindly remove numbers from titles.
+
+For example:
+
+HOP Zona Nord 2026
+
+must retain "2026".
+
+Prefer structural separation from the HTML over a large hard-coded blacklist.
+
+Preview
+
+Create a simple preview UI.
+
+It should show:
+
+- number of activities detected
+- checkbox for each activity
+- select all
+- deselect all
+- activity title
+- registration date/time when available
+- event date/time
+- venue
+- expandable or otherwise accessible details
+- selected count
+
+Example:
+
+CCivics
+
+8 activities found · 6 selected
+
+☑ Mami Wata
+  Registration: 01/09/2026
+  Event: 15/09/2026 · 20:00
+
+☑ Trio Ether
+  Registration: 28/09/2026 · 10:00
+  Event: 02/10/2026 · 19:00
+
+...
+
+[Select all] [Deselect all]
+
+Architecture
+
+Keep the implementation lightweight and modular.
+
+Use separate responsibilities for:
+
+- page/source detection
+- activity extraction
+- data normalization
+- title normalization
+- preview UI
+- configuration
+
+Do not build a huge generic event-detection framework.
+
+CCivics knows the structure of its initial source and should use that advantage.
+
+However, keep the extraction layer replaceable so other sources can be added later.
+
+Future sources may include circus/festival websites, but do not implement them now.
+
+Localization
+
+Prepare the UI for:
+
+- CA — Català
+- ES — Español
+- EN — English
+
+Do not hard-code UI strings into the extraction logic.
+
+Themes
+
+Prepare three themes, as in the user's other extension projects:
+
+- Light
+- Dark
+- System
+
+Use centralized CSS variables.
+
+Keep the UI clear and simple.
+
+Performance
+
+The extension should be lightweight.
+
+Avoid permanent MutationObservers unless genuinely required.
+
+Prefer:
+
+user opens/analyzes page
+        ↓
+extract
+        ↓
+finish
+
+Do not continuously scan the page.
+
+Code style
+
+Use clear filenames and concise comments.
+
+Each source file should have a short filename/header comment.
+
+Use clear function names such as:
+
+PanelOpen()
+PanelClose()
+SpinnerShow()
+SpinnerHide()
+
+Keep configuration centralized.
+
+Do not over-comment obvious code.
+
+Repository
+
+First inspect the existing repository and preserve anything useful.
+
+Current repository:
+
+"ZAlexT/CCivics"
+
+Also inspect:
+
+"CCivics.html"
+
+because it contains Centre Cívic URLs that can be useful as test references.
+
+Do not delete existing useful material.
+
+Testing
+
+Use real "inscripcionscc.com" pages from the existing CCivics references to test the extractor.
+
+Pay particular attention to:
+
+- pages with many activities
+- multiple sessions
+- specific registration dates
+- registration date + time
+- relative registration
+- no registration
+- cycle/program labels
+- general page information mixed with activities
+
+Scope control
+
+For this task:
+
+Implement
+
+- extension skeleton
+- source detection
+- activity detection
+- title extraction
+- selected-activity extraction
+- data normalization
+- preview
+- CA/ES/EN foundation
+- three themes foundation
+
+Do NOT implement yet
+
+- Google Calendar OAuth
+- Google Calendar API
+- automatic category icons
+- external circus/festival sources
+- duplicate detection
+- event updating
+- advanced settings
+
+Build the smallest reliable version first.
+
+Before finishing, test the implementation against several real Centre Cívic pages and fix extraction errors you encounter.
+
+Do not merely describe what should be done: actually create and modify the files in the repository and leave the repository in a working V0.1 state.
