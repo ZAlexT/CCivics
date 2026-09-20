@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "CCivics",
+  "version": "0.1.0",
+  "description": "Preview activities from Centre C\u00edvic Barcelona registration pages.",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "action": {
+    "default_title": "CCivics",
+    "default_popup": "popup/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.inscripcionscc.com/*"
+      ],
+      "js": [
+        "src/config.js",
+        "src/i18n.js",
+        "src/normalize.js",
+        "src/source.js",
+        "src/extractor.js",
+        "src/panel.js",
+        "src/content.js"
+      ],
+      "css": [
+        "src/content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "src/content.css"
+      ],
+      "matches": [
+        "https://*.inscripcionscc.com/*"
+      ]
+    }
+  ]
+}
