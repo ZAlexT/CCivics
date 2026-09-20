@@ -33,3 +33,10 @@ assert.equal(urgell.eventDate, '2026-10-22');
 assert.equal(urgell.startTime, '19:00');
 assert.equal(urgell.registrationDate, '2026-10-19');
 assert.equal(urgell.registrationTime, '10:00');
+let requestedSelector = '';
+const detectedCards = context.CCivics.extractor.candidateBlocks({ querySelectorAll(selector) {
+  requestedSelector = selector;
+  return [block('XAVI CASTILLO 3+4', '22 d’octubre de 2026\nPreu: Gratuït')];
+} });
+assert.equal(requestedSelector, context.CCivics.config.blockSelectors.join(','));
+assert.equal(detectedCards.length, 1);
