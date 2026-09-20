@@ -1,0 +1,1 @@
+body { margin:0; min-width:250px; font:14px/1.4 system-ui,sans-serif; color:#14213d; } main { padding:16px; } h1 { margin:0 0 8px; } p { min-height:20px; color:#526273; } button, select { font:inherit; } button { width:100%; padding:8px; background:#006d77; border:0; border-radius:6px; color:#fff; } label { display:block; margin-top:12px; } select { float:right; }
