@@ -10,7 +10,7 @@ CCivics.extractor = (() => {
     const link = block.querySelector('a');
     return link ? title(link.textContent) : '';
   };
-  const candidateBlocks = root => [...root.querySelectorAll(CCivics.config.blockSelectors.join(','))].filter(block => {
+  const candidateBlocks = root => [...root.querySelectorAll(CCivics.config.blockSelectors)].filter(block => {
     const text = clean(block.textContent); const heading = findTitle(block);
     return heading && text.length > 12 && text.length < 12000 && (extractDates(text).length || /inscrip|horari|dies?|sessions?|preu|€|gratu/i.test(text));
   }).filter(block => ![...block.children].some(child => {

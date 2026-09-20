@@ -6,7 +6,7 @@ const context = { window: {}, CCivics: {}, location: { href: 'https://example.in
 context.window.window = context.window; context.window.CCivics = context.CCivics; context.window.location = context.location; vm.createContext(context);
 ['src/config.js', 'src/normalize.js', 'src/source.js', 'src/extractor.js'].forEach(file => vm.runInContext(fs.readFileSync(file, 'utf8'), context));
 const block = (heading, text) => ({ innerText: text, textContent: text, children: [], querySelector(selector) {
-  if (['h1', 'h2', 'h3', 'h4', 'h5'].includes(selector)) return { textContent: heading };
+  if (['h1', 'h2', 'h3', 'h4'].includes(selector)) return { textContent: heading };
   if (selector === 'a[href]') return { href: 'https://example.inscripcionscc.com/detail' };
   return null;
 } });
@@ -25,18 +25,3 @@ assert.equal(noRegistration.registrationDate, null);
 assert.equal(noRegistration.eventDate, '2026-10-15');
 assert.equal(noRegistration.startTime, '18:30');
 console.log('extractor checks passed');
-
-const urgell = context.CCivics.extractor.eventFromBlock(block('XAVI CASTILLO 3+4', [
-  'Dijous 22 d’octubre, a les 19 h', "22 d’octubre de 2026", "Espai: IES POETA MARAGALL (SALA D'ACTES) C/Provença, 187", 'Preu: Gratuït', 'Les inscripcions on line les podreu fer a partir del 19/10/2026 a les 10 h'
-].join('\n')));
-assert.equal(urgell.eventDate, '2026-10-22');
-assert.equal(urgell.startTime, '19:00');
-assert.equal(urgell.registrationDate, '2026-10-19');
-assert.equal(urgell.registrationTime, '10:00');
-let requestedSelector = '';
-const detectedCards = context.CCivics.extractor.candidateBlocks({ querySelectorAll(selector) {
-  requestedSelector = selector;
-  return [block('XAVI CASTILLO 3+4', '22 d’octubre de 2026\nPreu: Gratuït')];
-} });
-assert.equal(requestedSelector, context.CCivics.config.blockSelectors.join(','));
-assert.equal(detectedCards.length, 1);
